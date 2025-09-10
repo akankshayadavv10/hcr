@@ -1,10 +1,13 @@
 import { useNavigate } from "react-router-dom";
 import { User } from "lucide-react";
+import { clearAuth } from "../utils/auth";
 
 export default function Navbar({ title }) {
   const navigate = useNavigate();
 
   const handleLogout = () => {
+
+    clearAuth()
     localStorage.removeItem("token");
     localStorage.removeItem("role");
     navigate("/login");
