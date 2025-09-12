@@ -11,6 +11,8 @@ const auth = require("../middleware/authMiddleware");
 
 const roleController = require("../controllers/userRoleController");
 
+const { getFacultyStudents } = require("../controllers/studentControllers");
+
 // GET all roles
 router.get("/roles", roleController.getRoles);
 
@@ -57,6 +59,11 @@ router.get("/teachers", teacherControllers.getTeachers);
 router.get("/teachers/:id", teacherControllers.getTeacherById);
 router.put("/teachers/:id", teacherControllers.updateTeacher);
 router.delete("/teachers/:id", teacherControllers.deleteTeacher);
+// router.get("teachers/:facultyId", studentCtrl.getFacultyStudents);
+// router.get("/teachers/:facultyId/students", studentCtrl.getFacultyStudents);
+router.get("/teachers/:facultyId/students", studentCtrl.getFacultyStudents);
+router.get("/teachers/:id/students", teacherControllers.getTeacherStudents);
+
 module.exports = router
 
 

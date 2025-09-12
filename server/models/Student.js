@@ -5,11 +5,11 @@ const studentSchema = new mongoose.Schema({
   name: { type: String, required: [true, "Your Name is required"] },
 
   // make course & teacher optional so we can create student record at signup time
-  course: { type: mongoose.Schema.Types.ObjectId, ref: "Course", default: null },
-  teacher: { type: mongoose.Schema.Types.ObjectId, ref: "Teacher", default: null },
+  course: { type: mongoose.Schema.Types.ObjectId, ref: "Course" },
+  teacher: { type: mongoose.Schema.Types.ObjectId, ref: "Teacher" },
 
   // link to the User document (the logged-in account)
-  userId: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
+  userId: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
 
   status: { type: String, default: "ongoing" },
   createdAt: { type: Date, default: Date.now },

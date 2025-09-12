@@ -79,3 +79,14 @@ exports.deleteHCR = async (req, res) => {
     res.status(500).json({ success: false, message: "Internal server error" });
   }
 };
+exports.getHCRByStudentId = async (req, res) => {
+  try {
+    const studentId = req.params.id;
+    const hcrRecords = await HCR.find({ student: studentId }).populate("student");
+
+    res.status(200).json({ success: true, hcrRecords });
+  } catch (err) {
+    console.error("Error fetching HCR records:", err);
+    res.status(500).json({ success: false, message: "Server error" });
+  }
+};

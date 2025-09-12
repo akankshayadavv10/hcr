@@ -103,36 +103,37 @@
 
 
 const Student = require("../models/Student");
-
+const mongoose = require("mongoose");
 
 exports.createStudent = async (req, res) => {
   try {
     const { name, course, teacher, userId } = req.body;
+    console.log("📥 Incoming data:", req.body);
 
-    // userId can be optional if you're creating a student record later
     const student = await Student.create({ name, course, teacher, userId });
     res.status(201).json({ success: true, message: "Student created", student });
   } catch (err) {
-    console.error(err);
-    res.status(500).json({ success: false, message: "Internal server error" });
+    console.error("❌ Error creating student:", err.message);
+    res.status(500).json({ success: false, message: err.message });
   }
 };
 
-exports.getAllStudents = async (req, res) => {
-  try {
-    const { teacher } = req.query;
 
-    const filter = teacher ? { teacher } : {};
-    const students = await Student.find(filter)
-      .populate("course", "name")
-      .populate("teacher", "name");
+// exports.getAllStudents = async (req, res) => {
+//   try {
+//     const { teacher } = req.query;
 
-    res.status(200).json({ success: true, students });
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ success: false, message: "Internal server error" });
-  }
-};
+//     const filter = teacher ? { teacher } : {};
+//     const students = await Student.find(filter)
+//       .populate("course", "name")
+//       .populate("teacher", "name");
+
+//     res.status(200).json({ success: true, students });
+//   } catch (err) {
+//     console.error(err);
+//     res.status(500).json({ success: false, message: "Internal server error" });
+//   }
+// };
 
 exports.getStudentById = async (req, res) => {
   try {
@@ -199,9 +200,9 @@ const getFacultyStudents = async (req, res) => {
 exports.getFacultyStudents = async (req, res) => {
   try {
     let students;
-    if (req.user.role === "faculty") {
-      students = await Student.find({ facultyId: req.user._id });
-    } else {
+    if (req.facultyId)
+      students = await Student.find({ facultyId: req.facultyId });
+    else {
       students = await Student.find(); // admin
     }
     res.json({ students });
@@ -228,7 +229,7 @@ exports.getStudentDashboard = async (req, res) => {
 exports.getMyStudents = async (req, res) => {
   try {
     // req.user.id comes from JWT middleware
-    const teacherId = req.user.id; 
+    const teacherId = req.user.id;
 
     const students = await Student.find({ teacher: teacherId })
       .populate("course")
@@ -237,5 +238,43 @@ exports.getMyStudents = async (req, res) => {
     res.json({ students });
   } catch (err) {
     res.status(500).json({ message: err.message });
+  }
+};
+
+
+
+exports.getAllStudents = async (req, res) => {
+  try {
+    const { facultyId } = req.query; // pass ?teacherId=<id> from frontend
+
+    const filter = facultyId ? { teacher: facultyId } : {}; // only filter if teacherId is provided
+
+    const students = await Student.find(filter)
+      .populate("course", "name")
+      .populate("teacher", "name");
+
+    res.status(200).json({ success: true, students });
+  } catch (err) {
+    console.error("Error fetching students:", err);
+    res.status(500).json({ success: false, message: "Internal server error" });
+  }
+};
+
+exports.getFacultyStudents = async (req, res) => {
+  const { facultyId } = req.params;
+
+  if (!mongoose.Types.ObjectId.isValid(facultyId)) {
+    return res.status(400).json({ success: false, message: "Invalid faculty ID" });
+  }
+
+  try {
+    const students = await Student.find({ teacher: facultyId })
+      .populate("teacher", "name")
+      .populate("course", "name");
+
+    res.status(200).json({ success: true, students });
+  } catch (err) {
+    console.error("Error fetching faculty students:", err);
+    res.status(500).json({ success: false, message: "Internal server error" });
   }
 };

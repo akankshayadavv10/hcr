@@ -529,7 +529,7 @@ export default function App() {
 
         {/* ✅ Public routes for Teacher → Students → Student Detail → HCR */}
         <Route path="/teachers" element={<FacultyList />} />
-        <Route path="/teachers/:teacherId/students" element={<FacultyStudents />} />
+        <Route path="/teachers/:facultyId" element={<FacultyStudents />} />
         <Route path="/students/:studentId/detail" element={<StudentDetails />} />
 
         {/* Public auth routes */}

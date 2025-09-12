@@ -6,18 +6,24 @@ export default function FacultyStudents() {
   const { facultyId } = useParams();
   const [students, setStudents] = useState([]);
   const navigate = useNavigate();
+  console.log("facultyId:",facultyId);
+  
+useEffect(() => {
+  const fetchStudents = async () => {
+    if (!facultyId) return;
+    try {
+      const res = await api.get(`/teachers/${facultyId}/students`);
+      console.log("Fetched students:", res.data.students);   // ✅ debug log
+      setStudents(res.data.students || []);
+    } catch (err) {
+      console.error("Error fetching faculty students:", err);
+    }
+  };
 
-  useEffect(() => {
-    const fetchStudents = async () => {
-      try {
-        const res = await api.get(`/teachers/${facultyId}/students`);
-        setStudents(res.data.students || []);
-      } catch (err) {
-        console.error('Error fetching faculty students:', err);
-      }
-    };
-    fetchStudents();
-  }, [facultyId]);
+  fetchStudents();
+}, [facultyId]);
+
+
 
   return (
     <div className="p-6">
@@ -26,7 +32,8 @@ export default function FacultyStudents() {
         {students.map((s) => (
           <button
             key={s._id}
-            onClick={() => navigate(`/student/${s._id}`)}
+            onClick={() => navigate(`/students/${s._id}/detail`)
+}
             className="px-4 py-2 bg-green-600 text-white rounded-lg shadow hover:bg-green-700"
           >
             {s.name}

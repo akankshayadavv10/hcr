@@ -10,6 +10,8 @@ export default function FacultyList() {
     const fetchTeachers = async () => {
       try {
         const res = await api.get('/teachers');
+        console.log("teacher data:",res.data.teachers[0]._id);
+        
         setTeachers(res.data.teachers || []);
       } catch (err) {
         console.error('Error fetching teachers:', err);
@@ -22,15 +24,16 @@ export default function FacultyList() {
     <div className="p-6">
       <h2 className="text-xl font-bold mb-4">Faculty Listing</h2>
       <div className="flex flex-wrap gap-3">
-        {teachers.map((t) => (
+  {teachers.map((t) => (
           <button
             key={t._id}
-            onClick={() => navigate(`/faculty/${t._id}`)}
+            onClick={() => navigate(`/teachers/${t._id}`)}          
             className="px-4 py-2 bg-blue-600 text-white rounded-lg shadow hover:bg-blue-700"
           >
             {t.name}
           </button>
         ))}
+
       </div>
     </div>
   );

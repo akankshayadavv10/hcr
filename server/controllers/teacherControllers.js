@@ -97,3 +97,13 @@ module.exports.deleteTeacher = async (req, res) => {
         res.status(500).json({ message: "Internal server error", success: false });
     }
 };
+exports.getTeacherStudents = async (req, res) => {
+  try {
+    const students = await Student.find({ teacher: req.params.id })
+      .populate("course")
+      .populate("teacher");
+    res.json({ success: true, students });
+  } catch (err) {
+    res.status(500).json({ success: false, message: err.message });
+  }
+};
