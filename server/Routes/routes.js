@@ -39,10 +39,20 @@ router.get("/student/dashboard", auth(["student"]), studentCtrl.getStudentDashbo
 
 // HCRs
 router.post("/hcr", hcrCtrl.createHCR);
+
+// Get ALL HCRs
 router.get("/hcr", hcrCtrl.getAllHCRs);
+
+// Get HCRs of a particular student
 router.get("/hcr/student/:studentId", hcrCtrl.getHCRsByStudent);
+
+// Get HCR by ID
 router.get("/hcr/:id", hcrCtrl.getHCRById);
+
+// Update HCR
 router.put("/hcr/:id", hcrCtrl.updateHCR);
+
+// Delete HCR
 router.delete("/hcr/:id", hcrCtrl.deleteHCR);
 
 // Courses
