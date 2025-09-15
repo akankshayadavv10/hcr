@@ -1,29 +1,34 @@
 import { useState, useEffect } from "react";
 import api from "../services/api";
 import { useNavigate } from "react-router-dom";
+import Logo from "../assets/disha_logo.png"; // 👈 replace with your institute logo path
 
 export default function Signup() {
   const navigate = useNavigate();
-  const [form, setForm] = useState({ name: "", email: "", password: "", role: "" });
+  const [form, setForm] = useState({
+    name: "",
+    email: "",
+    password: "",
+    role: "",
+  });
   const [roles, setRoles] = useState([]);
   const [error, setError] = useState("");
 
-useEffect(() => {
-  const fetchRoles = async () => {
-    try {
-      const { data } = await api.get("/roles");
-      console.log("Roles fetched:", data);  // 👈 log here
-      setRoles(data);
-      if (data.length > 0) {
-        setForm(f => ({ ...f, role: data[0].roleName }));
+  useEffect(() => {
+    const fetchRoles = async () => {
+      try {
+        const { data } = await api.get("/roles");
+        console.log("Roles fetched:", data);
+        setRoles(data);
+        if (data.length > 0) {
+          setForm((f) => ({ ...f, role: data[0].roleName }));
+        }
+      } catch (err) {
+        console.error("Failed to fetch roles", err);
       }
-    } catch (err) {
-      console.error("Failed to fetch roles", err);
-    }
-  };
-  fetchRoles();
-}, []);
-
+    };
+    fetchRoles();
+  }, []);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -40,55 +45,91 @@ useEffect(() => {
   };
 
   return (
-    <div className="max-w-md mx-auto mt-10 p-6 border rounded-lg shadow">
-      <h2 className="text-xl font-bold mb-4">Signup</h2>
-      {error && <p className="text-red-500 mb-2">{error}</p>}
+    <div className="min-h-screen flex items-center justify-center bg-background dark:bg-backgroundDark p-4">
+      <div className="w-full max-w-md bg-card dark:bg-cardDark shadow-elevated rounded-2xl p-8 flex flex-col items-center">
+        
+        {/* Logo + Title */}
+        <div className="flex flex-col items-center mb-6">
+          <img
+            src={Logo}// 👈 replace with your institute logo path
+            alt="Institute Logo"
+            className="w-40 h-40 mb-3"
+          />
+          <h2 className="text-xl font-bold text-foreground dark:text-foregroundDark text-center">
+            HCR Institute Signup
+          </h2>
+        </div>
 
-      <form onSubmit={handleSubmit} className="space-y-3">
-        <input
-          type="text"
-          placeholder="Name"
-          value={form.name}
-          onChange={(e) => setForm({ ...form, name: e.target.value })}
-          className="w-full border px-3 py-2 rounded"
-          required
-        />
-        <input
-          type="email"
-          placeholder="Email"
-          value={form.email}
-          onChange={(e) => setForm({ ...form, email: e.target.value })}
-          className="w-full border px-3 py-2 rounded"
-          required
-        />
-        <input
-          type="password"
-          placeholder="Password"
-          value={form.password}
-          onChange={(e) => setForm({ ...form, password: e.target.value })}
-          className="w-full border px-3 py-2 rounded"
-          required
-        />
+        {/* Error Message */}
+        {error && (
+          <p className="text-error text-sm font-medium mb-3 text-center">
+            {error}
+          </p>
+        )}
 
-        <select
-          value={form.role}
-          onChange={(e) => setForm({ ...form, role: e.target.value })}
-          className="w-full border px-3 py-2 rounded"
-        >
-          {roles.map((r) => (
-            <option key={r._id} value={r.roleName}>
-              {r.roleName}
-            </option>
-          ))}
-        </select>
+        {/* Form */}
+        <form onSubmit={handleSubmit} className="w-full space-y-5">
+          <input
+            type="text"
+            placeholder="Full Name"
+            value={form.name}
+            onChange={(e) => setForm({ ...form, name: e.target.value })}
+            className="w-full px-4 py-3 rounded-xl border border-muted dark:border-mutedDark 
+              focus:ring-2 focus:ring-primary focus:border-primary
+              bg-background dark:bg-backgroundDark text-foreground dark:text-foregroundDark
+              placeholder-muted dark:placeholder-mutedDark outline-none transition"
+            required
+          />
 
-        <button
-          type="submit"
-          className="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700"
-        >
-          Signup
-        </button>
-      </form>
+          <input
+            type="email"
+            placeholder="Email"
+            value={form.email}
+            onChange={(e) => setForm({ ...form, email: e.target.value })}
+            className="w-full px-4 py-3 rounded-xl border border-muted dark:border-mutedDark 
+              focus:ring-2 focus:ring-primary focus:border-primary
+              bg-background dark:bg-backgroundDark text-foreground dark:text-foregroundDark
+              placeholder-muted dark:placeholder-mutedDark outline-none transition"
+            required
+          />
+
+          <input
+            type="password"
+            placeholder="Password"
+            value={form.password}
+            onChange={(e) => setForm({ ...form, password: e.target.value })}
+            className="w-full px-4 py-3 rounded-xl border border-muted dark:border-mutedDark 
+              focus:ring-2 focus:ring-primary focus:border-primary
+              bg-background dark:bg-backgroundDark text-foreground dark:text-foregroundDark
+              placeholder-muted dark:placeholder-mutedDark outline-none transition"
+            required
+          />
+
+          <select
+            value={form.role}
+            onChange={(e) => setForm({ ...form, role: e.target.value })}
+            className="w-full px-4 py-3 rounded-xl border border-muted dark:border-mutedDark 
+              focus:ring-2 focus:ring-primary focus:border-primary
+              bg-background dark:bg-backgroundDark text-foreground dark:text-foregroundDark
+              outline-none transition"
+          >
+            {roles.map((r) => (
+              <option key={r._id} value={r.roleName}>
+                {r.roleName}
+              </option>
+            ))}
+          </select>
+
+          <button
+            type="submit"
+            className="w-full py-3 px-4 bg-primary hover:bg-primary-light 
+              text-primary-foreground font-semibold rounded-xl 
+              shadow-soft transition duration-200 ease-in-out"
+          >
+            Signup
+          </button>
+        </form>
+      </div>
     </div>
   );
 }

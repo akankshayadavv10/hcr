@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import api from '../services/api';
 import { motion } from 'framer-motion';
+import Logo from "../assets/disha_logo.png"; // 👈 replace with your institute logo path
 
 export default function FacultyStudents() {
   const { facultyId } = useParams();
@@ -32,9 +33,14 @@ export default function FacultyStudents() {
       
       {/* Institute Logo */}
       <div className="mb-8 flex flex-col items-center">
-        <div className="w-28 h-28 rounded-full bg-gray-200 dark:bg-cardDark flex items-center justify-center shadow-lg animate-pulse">
-          <span className="text-sm font-bold text-gray-600 dark:text-muted">LOGO</span>
-        </div>
+        {/* <div className="w-28 h-28 rounded-full bg-gray-200 dark:bg-cardDark flex items-center justify-center shadow-lg animate-pulse"> */}
+<img
+                      src={Logo}// 👈 replace with your institute logo path
+                      alt="Institute Logo"
+                      className="w-40 h-40"
+                    />
+          {/* <span className="text-sm font-bold text-gray-600 dark:text-muted">LOGO</span> */}
+        {/* </div> */}
         <h1 className="mt-4 text-3xl font-bold text-foreground dark:text-foregroundDark">Students of Faculty</h1>
       </div>
 

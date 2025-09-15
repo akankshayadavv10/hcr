@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import api from '../services/api';
-
+import Logo from "../assets/disha_logo.png"; // 👈 replace with your institute logo path
 export default function FacultyList() {
   const [teachers, setTeachers] = useState([]);
   const navigate = useNavigate();
@@ -32,10 +32,15 @@ export default function FacultyList() {
     <div className="min-h-screen flex flex-col items-center p-6 bg-background">
       {/* Logo placeholder */}
       <div className="mb-10 flex flex-col items-center">
-        <div className="w-20 h-20 rounded-full bg-gray-200 flex items-center justify-center shadow-card">
+        {/* <div className="w-20 h-20 flex items-center justify-center shadow-card"> */}
           {/* Replace with <img src="/logo.png" alt="Logo" /> */}
-          <span className="text-sm font-semibold text-gray-600">LOGO</span>
-        </div>
+          {/* <span className="text-sm font-semibold text-gray-600">LOGO</span> */}
+            <img
+                      src={Logo}// 👈 replace with your institute logo path
+                      alt="Institute Logo"
+                      className="w-40 h-40"
+                    />
+        {/* </div> */}
         <h2 className="mt-4 text-2xl font-bold text-foreground">Faculty Listing</h2>
       </div>
 
