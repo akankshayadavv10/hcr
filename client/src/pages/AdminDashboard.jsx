@@ -44,7 +44,7 @@ export default function AdminDashboard() {
 
   return (
     <div className="min-h-full">
-      <Navbar title="Institute Admin Panel" />
+      <Navbar title="Welcome Admin" />
       <main className="max-w-7xl mx-auto px-4 py-6 space-y-6">
         {/* Tabs */}
         <nav className="card p-2 flex flex-wrap gap-2">
