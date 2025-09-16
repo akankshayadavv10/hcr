@@ -41,7 +41,7 @@ export default function DataTable({ columns = [], rows = [], onEdit = () => {}, 
                     onClick={() => onEdit(row)}
                     className="
                       px-3 py-1 rounded-xl
-                      bg-secondary text-secondary.foreground
+                      bg-warning-light text-secondary.foreground
                       hover:bg-secondary.light
                       transition-all duration-300
                     "

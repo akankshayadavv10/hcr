@@ -9,6 +9,7 @@ export default function StudentDetails() {
   const [hcrList, setHcrList] = useState([]);
   const [form, setForm] = useState({ topic: '', description: '' });
   const [showForm, setShowForm] = useState(false);
+  const [editingId, setEditingId] = useState(null); // 👉 track edit mode
 
   // Fetch student & HCRs
   useEffect(() => {
@@ -34,25 +35,48 @@ export default function StudentDetails() {
     fetchHCR();
   }, [studentId]);
 
-  // Save HCR record
+  // Save new or updated record
   const handleSave = async (e) => {
     e.preventDefault();
     try {
-      const payload = { student: studentId, topic: form.topic, description: form.description };
-      const res = await api.post('/hcr', payload);
-      setHcrList((prev) => [...prev, res.data.record]);
+      if (editingId) {
+        // 👉 Update existing record
+        const res = await api.put(`/hcr/${editingId}`, {
+          topic: form.topic,
+          description: form.description,
+        });
+        setHcrList((prev) =>
+          prev.map((h) => (h._id === editingId ? res.data.record : h))
+        );
+      } else {
+        // 👉 Create new record
+        const payload = {
+          student: studentId,
+          topic: form.topic,
+          description: form.description,
+        };
+        const res = await api.post('/hcr', payload);
+        setHcrList((prev) => [...prev, res.data.record]);
+      }
       setForm({ topic: '', description: '' });
       setShowForm(false);
+      setEditingId(null);
     } catch (err) {
-      console.error('Error creating HCR:', err);
+      console.error('Error saving HCR:', err);
     }
+  };
+
+  // Start editing a record
+  const handleEdit = (record) => {
+    setForm({ topic: record.topic, description: record.description });
+    setEditingId(record._id);
+    setShowForm(true);
   };
 
   if (!student) return <div className="p-6 text-center">Loading student...</div>;
 
   return (
     <div className="p-6 space-y-6 bg-background dark:bg-backgroundDark min-h-screen">
-      
       {/* Student Info */}
       <motion.div
         className="card p-6 rounded-2xl shadow-xl bg-card dark:bg-cardDark text-center"
@@ -68,7 +92,11 @@ export default function StudentDetails() {
       {/* Add Record Button */}
       <div className="flex justify-center">
         <motion.button
-          onClick={() => setShowForm(true)}
+          onClick={() => {
+            setForm({ topic: '', description: '' });
+            setEditingId(null);
+            setShowForm(true);
+          }}
           className="px-5 py-2 bg-primary text-white rounded-xl shadow hover:bg-primary-dark transition"
           whileHover={{ scale: 1.05 }}
           whileTap={{ scale: 0.95 }}
@@ -77,7 +105,7 @@ export default function StudentDetails() {
         </motion.button>
       </div>
 
-      {/* Add Record Form */}
+      {/* Add/Edit Record Form */}
       {showForm && (
         <motion.form
           onSubmit={handleSave}
@@ -86,6 +114,9 @@ export default function StudentDetails() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.4 }}
         >
+          <h3 className="text-lg font-semibold text-primary dark:text-primary-light mb-2">
+            {editingId ? 'Edit Record' : 'Add Record'}
+          </h3>
           <div>
             <label className="block text-sm font-semibold text-foreground dark:text-foregroundDark">Topic</label>
             <input
@@ -107,7 +138,10 @@ export default function StudentDetails() {
           <div className="flex justify-end gap-3">
             <button
               type="button"
-              onClick={() => setShowForm(false)}
+              onClick={() => {
+                setShowForm(false);
+                setEditingId(null);
+              }}
               className="px-4 py-2 rounded-xl bg-gray-200 hover:bg-gray-300 transition"
             >
               Cancel
@@ -116,7 +150,7 @@ export default function StudentDetails() {
               type="submit"
               className="px-4 py-2 rounded-xl bg-primary text-white shadow hover:bg-primary-dark transition"
             >
-              Save
+              {editingId ? 'Update' : 'Save'}
             </button>
           </div>
         </motion.form>
@@ -139,18 +173,32 @@ export default function StudentDetails() {
                 <th className="p-3 border text-left">Date</th>
                 <th className="p-3 border text-left">Topic</th>
                 <th className="p-3 border text-left">Description</th>
+                <th className="p-3 border text-center">Actions</th>
               </tr>
             </thead>
             <tbody>
               {hcrList.map((h) => (
                 <motion.tr
                   key={h._id}
-                  className="border hover:bg-primary/10 dark:hover:bg-primary-dark/20 transition-colors cursor-pointer"
+                  className="border hover:bg-primary/10 dark:hover:bg-primary-dark/20 transition-colors"
                   whileHover={{ scale: 1.01 }}
                 >
                   <td className="p-2 border">{new Date(h.createdAt).toLocaleDateString()}</td>
                   <td className="p-2 border">{h.topic}</td>
                   <td className="p-2 border">{h.description}</td>
+                  <td className="p-2 border text-center">
+                    <button
+                      onClick={() => handleEdit(h)}
+                                         className="
+                      px-3 py-1 rounded-xl
+                      bg-warning-light text-secondary.foreground
+                      hover:bg-secondary.light
+                      transition-all duration-300
+                    "
+                    >
+                      Edit
+                    </button>
+                  </td>
                 </motion.tr>
               ))}
             </tbody>
