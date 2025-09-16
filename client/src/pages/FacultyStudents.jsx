@@ -66,7 +66,9 @@ export default function FacultyStudents() {
 
         {/* Two-column scrollable student buttons */}
         {/* Two-column scrollable student buttons */}
-<div className="grid grid-cols-2 gap-4 overflow-y-auto max-h-[70vh]">
+{/* <div className="grid grid-cols-2 gap-4 overflow-y-auto max-h-[70vh]"> */}
+<div className="grid grid-cols-1 sm:grid-cols-2 gap-4 overflow-y-auto max-h-[70vh]">
+
   {filteredStudents.length > 0 ? (
     filteredStudents.map((s) => (
       <motion.button
