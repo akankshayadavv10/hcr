@@ -78,7 +78,7 @@ const JWT_SECRET = "supersecret123"; // you can move to .env later
 const roleRoutes = require("./Routes/roleRoutes");
 const studentRoutes = require("./Routes/studentRoutes");
 // MongoDB connection
-mongoose.connect("mongodb://localhost:27017/hc", {
+mongoose.connect("mongodb+srv://akanksha:akanksha_10y@cluster0.5nejvsr.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0", {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 })
