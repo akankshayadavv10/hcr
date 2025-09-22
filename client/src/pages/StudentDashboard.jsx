@@ -14,7 +14,7 @@ export default function StudentDashboard() {
  useEffect(() => {
  const fetchData = async () => {
   try {
-    const res = await axios.get("http://localhost:5000/student/dashboard", {
+    const res = await axios.get("https://hcr-1.onrender.com/student/dashboard", {
       headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
     });
     console.log(res.data);
@@ -35,12 +35,12 @@ export default function StudentDashboard() {
     try {
       // create HCR linked to this student
       await axios.post(
-        "http://localhost:5000/hcr",
+        "https://hcr-1.onrender.com/hcr",
         { student: details._id, topic: "Daily HCR", description: desc },
         { headers: { Authorization: `Bearer ${token}` } }
       );
       // reload the dashboard
-      const res = await axios.get("http://localhost:5000/student/dashboard", {
+      const res = await axios.get("https://hcr-1.onrender.com/student/dashboard", {
         headers: { Authorization: `Bearer ${token}` },
       });
       const dashboard = res.data.dashboard || {};
